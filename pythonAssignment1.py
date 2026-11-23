@@ -28,6 +28,12 @@ def plotReadings(data, threshold):
     ax.plot(l, d)
     plt.show()
 
+def plotHistogram(data):
+    d = np.array(data)
+    fig, hist = plt.subplots()
+    hist.hist(data, bins=len(d))
+    plt.show()
+
 print("Enter the sensor type:")
 sensor = input()
 print("Sensor type:", sensor)
@@ -48,4 +54,5 @@ output = genReadings(10, reading_n)
 print(output)
 analyzeReadings(output, alert_threshold)
 plotReadings(output, alert_threshold)
+plotHistogram(output)
 
