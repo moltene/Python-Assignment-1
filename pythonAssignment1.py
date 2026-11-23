@@ -1,12 +1,13 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
 def genReadings(seed, amount):
     readings = np.empty(0)
     random.seed(seed)
     for i in range(amount):
-        readings = np.append(readings, float(random.randint(min_sensor, max_sensor-1))+random.random())
+        readings = np.append(readings, round(float(random.randint(min_sensor, max_sensor-1))+random.random(), 2 ))
     return readings
 
 def analyzeReadings(data, threshold):
@@ -26,7 +27,7 @@ def plotReadings(data, threshold, block):
     ax.plot(l, d)
     ax.grid(visible=True)
     ax.title.set_text('Sensor Readings')
-    ax.set_xlabel('Time')
+    ax.set_xlabel('Sample')
     ax.set_ylabel('Value')
     plt.show(block=block)
 
@@ -53,6 +54,10 @@ def userInput(text, varType):
         except ValueError:
             print("Invalid input. Please enter a valid value.")
 
+def genCSV(data):
+    with open(readings.csv) as csvfile:
+        fieldnames = (sample, reading)
+
 sensor = userInput("Enter the sensor type:", "str")
 reading_n = userInput("How many readings:", "int")
 min_sensor = userInput("Minimum sensor value:", "int")
@@ -64,5 +69,6 @@ print(output)
 analyzeReadings(output, alert_threshold)
 plotReadings(output, alert_threshold, False)
 plotHistogram(output, True)
+
 
 
