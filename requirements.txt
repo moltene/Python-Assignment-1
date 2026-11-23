@@ -1,0 +1,5 @@
+Program requirements:
+numpy
+matplotlib
+csv
+random
