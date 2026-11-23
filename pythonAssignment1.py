@@ -54,9 +54,15 @@ def userInput(text, varType):
         except ValueError:
             print("Invalid input. Please enter a valid value.")
 
-def genCSV(data):
-    with open(readings.csv) as csvfile:
-        fieldnames = (sample, reading)
+def genCSV(data, filename):
+    d = np.array(data)
+    with open(filename+'.csv', 'w', newline='') as csvfile:
+        fieldnames = ['sample', 'reading']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for i in range(len(d)):
+            writer.writerow({'sample': i, 'reading': d[i]})
+        print("CSV file stored as "+filename+".csv")
 
 sensor = userInput("Enter the sensor type:", "str")
 reading_n = userInput("How many readings:", "int")
@@ -67,6 +73,18 @@ alert_threshold = userInput("Alert threshold:", "float")
 output = genReadings(10, reading_n)
 print(output)
 analyzeReadings(output, alert_threshold)
+
+while True:
+    print("Generate CSV file? (y/n)")
+    plot = str(input())
+    if plot == 'y':
+        print("Filename?")
+        filename = input()
+        genCSV(output, filename)
+        break
+    elif plot == 'n':
+        break
+
 plotReadings(output, alert_threshold, False)
 plotHistogram(output, True)
 
