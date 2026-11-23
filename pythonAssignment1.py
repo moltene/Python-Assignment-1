@@ -2,8 +2,6 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-readings = np.empty(0)
-
 def genReadings(seed, amount):
     readings = np.empty(0)
     random.seed(seed)
@@ -20,39 +18,51 @@ def analyzeReadings(data, threshold):
     print(np.std(d))
     print(np.count_nonzero(d > threshold))
 
-def plotReadings(data, threshold):
+def plotReadings(data, threshold, block):
     d = np.array(data)
     l = np.arange(len(d))
     fig, ax = plt.subplots()
     ax.hlines(y=float(threshold), xmin=0, xmax=len(d), label='Threshold', colors='r', linestyles='dashed')
     ax.plot(l, d)
-    plt.show()
+    ax.grid(visible=True)
+    ax.title.set_text('Sensor Readings')
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Value')
+    plt.show(block=block)
 
-def plotHistogram(data):
+def plotHistogram(data, block):
     d = np.array(data)
     fig, hist = plt.subplots()
-    hist.hist(data, bins=len(d))
-    plt.show()
+    hist.hist(data, bins=20, rwidth=0.75)
+    hist.grid(visible=True)
+    hist.title.set_text('Sensor Readings')
+    hist.set_xlabel('Value')
+    hist.set_ylabel('Frequency')
+    plt.show(block=block)
 
-print("Enter the sensor type:")
-sensor = input()
-print("Sensor type:", sensor)
-print("How many readings:")
-reading_n = int(input())
-print("Readings:", reading_n)
-print("Minimum sensor value:")
-min_sensor = int(input())
-print("Minimum sensor value:", min_sensor)
-print("Maximum sensor value:")
-max_sensor = int(input())
-print("Maximum sensor value:", max_sensor)
-print("Alert threshold:")
-alert_threshold = float(input())
-print("Alert threshold:", alert_threshold)
+def userInput(text, varType):
+    while True:
+        print(text)
+        try:
+            if varType == "int":
+                return int(input())
+            elif varType == "float":
+                return float(input())
+            elif varType == "str":
+                return input()
+        except ValueError:
+            print("Invalid input. Please enter a valid value.")
+
+sensor = userInput("Enter the sensor type:", "str")
+reading_n = userInput("How many readings:", "int")
+min_sensor = userInput("Minimum sensor value:", "int")
+max_sensor = userInput("Maximum sensor value:", "int")
+alert_threshold = userInput("Alert threshold:", "float")
 
 output = genReadings(10, reading_n)
 print(output)
 analyzeReadings(output, alert_threshold)
-plotReadings(output, alert_threshold)
-plotHistogram(output)
+plotReadings(output, alert_threshold, False)
+plotHistogram(output, True)
+
 
